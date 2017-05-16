@@ -1,5 +1,6 @@
 package main
 
+// import bufio for file reading
 import (
 	"database/sql"
 	"fmt"
@@ -45,6 +46,7 @@ func readChromeHistory() {
 	usr, err := user.Current()
 	checkErr(err)
 
+	// Chrome history reading
 	historyDb := usr.HomeDir + "/Library/Application Support/Google/Chrome/Default/history"
 	tmpHistory := usr.HomeDir + "/history"
 	copyFile(historyDb, tmpHistory)
@@ -54,6 +56,12 @@ func readChromeHistory() {
 	checkErr(err)
 	rows, err := db.Query("SELECT url FROM urls")
 	checkErr(err)
+
+	// File reading
+	// fileLoc := usr.HomeDir + "/pdomain1.txt"
+	// file, err := os.Open(fileLoc)
+	// checkErr(err)
+	// scanner := bufio.NewScanner(file)
 
 	// Open mongoDB to write prediction result
 	session, err = mgo.Dial("localhost")
@@ -74,6 +82,18 @@ func readChromeHistory() {
 	checkErr(err)
 
 	var url string
+
+	// File reading
+	// for scanner.Scan() {
+	// 	url = trimURL(scanner.Text())
+	//
+	// 	score := predict(url)
+	// 	err = c.Insert(&history{Url: url, Score: score})
+	// 	if !mgo.IsDup(err) {
+	// 		checkErr(err)
+	// 	}
+	// }
+
 	// Read each browser history entry and write prediction result to mongoDB
 	for rows.Next() {
 		err = rows.Scan(&url)
